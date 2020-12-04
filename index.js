@@ -8,86 +8,90 @@ const container = document.querySelector(".alerts");
 const img = new Image();
 const queue = new Queue();
 
-/* Sound Effects */
-const pewAudio = new Audio("horn.wav");
-const magicChime = new Audio("Magic_Chime.mp3");
-
-/* GIFs */
-const beyGif = "https://media.giphy.com/media/VxkNDa92gcsRq/giphy.gif";
-const welcomeGif = "https://media.giphy.com/media/l3V0doGbp2EDaLHJC/giphy.gif";
-const pizzaGif = "https://media.giphy.com/media/3o6nUXaNE4wdhq8Foc/giphy.gif";
-
+let fireQueue = [];
 
 // Resolve promise after duration
 const wait = async duration => {
   return new Promise(resolve => setTimeout(resolve, duration));
 };
 
-const pauseSpotify = () => {
-  fetch("https://serve.onegraph.com/graphql?app_id=cdf2ebe1-3ad3-408a-81c0-1ed675d76411", {body: '{"doc_id": "10fccd15-1a55-4a27-877a-a63106b4bd11"}', method: "POST"})
-}
-
 ComfyJS.Init(twitchTvHandle);
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
   console.log(`!${command} was typed in chat`);
 
-  if (command == "yo") {
-    new gifAlert(user, beyGif, pewAudio, command);
+  if (command == "fire") {
+    fireQueue.push(user);
   }
 
-  if (command == "welcome") {
-    new gifAlert(message, welcomeGif, magicChime, command);
-  }
-  // Ok, ready!
-  if(command == "music") {
-    new gifAlert(user, beyGif, pewAudio, command);
-    // Please don't stop the music
-    fetch("https://serve.onegraph.com/graphql?app_id=cdf2ebe1-3ad3-408a-81c0-1ed675d76411", {body: '{"doc_id": "e5e25f29-7862-4f23-8f53-8fb4373a0672"}', method: "POST"})
+  console.log(fireQueue);
 
-    const EVADE_THE_DMCA_BAN_LENGTH = 2500;
-    setTimeout(() => {
-      // Well, stop it after 2.5 seconds...
-      // Pause the player
-      pauseSpotify();
-    }, EVADE_THE_DMCA_BAN_LENGTH)
-  }
+  if(fireQueue.length > 1) {
+    let name1 = document.getElementById("name1");
+    let name2 = document.getElementById("name2");
 
-  if (flags.broadcaster && command == "pizza") {
-    new gifAlert(message, pizzaGif, magicChime, command);
+    name1.innerHTML = fireQueue[0];
+    name2.innerHTML = fireQueue[1];
   }
-
-  if (flags.broadcaster && command == "pause") {
-    // Clear GIF queue and pause for PAUSE_DURATION
-    queue.clear();
-    queue.pause(PAUSE_DURATION);
-  }
+  /*
+    TO-DO: Add some stuff to make it pop two people randomly, and then do a battle
+  */
 };
 
 ComfyJS.onChat = (user, message, flags, self, extra) => {
   console.log(user + ":", message);
 };
 
-const generateTitle = {
-  yo: " is hype!",
-  welcome: " needs a welcome!",
-  pizza: " needed a pizza party!",
-  music: " stopped the music!"
+let start1 = 500;
+let start2 = 500;
+let ship1Direction = 0;
+let ship2Direction = 0;
+let ship1 = null;
+let ship2 = null
+
+window.onload = function(){
+  ship1 = document.getElementById("ship1");
+  ship2 = document.getElementById("ship2");
+
+  ship1Direction = Math.floor(Math.random() * 2);
+  ship2Direction = Math.floor(Math.random() * 2);
 };
 
-function gifAlert(user, gif, audio, type) {
-  queue.add(async () => {
-    audio.play();
-    container.innerHTML = `
-      <h1 class="text-shadows">${user + generateTitle[type]}</h1>
-      <img src="${gif}" />
-    `;
-    container.style.opacity = 1;
 
-    await wait(DISPLAY_DURATION);
+window.setInterval(function(){
+  if(ship1Direction == 0) {
+    start1 -= 1;
+    ship1.style.top = start1;
+  }
+  else {
+    start1 += 1;
+    ship1.style.top = start1;
+  }
+  if(ship2Direction == 0) {
+    start2 -= 1;
+    ship2.style.top = start2;
+  }
+  else {
+    start2 += 1;
+    ship2.style.top = start2;
+  }
 
-    if (!queue.isLooping) {
-      container.style.opacity = 0;
-    }
+  // TO-DO: randomize directions
 
-  });
-}
+  if (start1 <= 50) {
+    ship1Direction = 1
+  }
+
+  if (start1 >= 900) {
+    ship1Direction = 0
+  }
+
+  if (start2 <= 50) {
+    ship2Direction = 1
+  }
+
+  if (start2 >= 900) {
+    ship2Direction = 0
+  }
+
+
+}, 1);
