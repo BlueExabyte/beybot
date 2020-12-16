@@ -38,8 +38,15 @@ window.setInterval(function(){
   if(playerQueue.length > 0)  {
     let playerName = document.getElementById("playerName");
     playerName.innerHTML = "<h1>"+ String(playerQueue[0]) + "</h1>";
+    let queueList = document.getElementById("queueList");
+    queueList.innerHTML = "Queue: "+ String(playerQueue);
     load_home();
     
     playerQueue.splice(0, 1);
   }
-}, 30000);
+  else {
+    document.getElementById("playerName").innerHTML = "";
+    document.getElementById("queueList").innerHTML = "";
+    document.getElementById("includedContent").innerHTML = "";
+  }
+}, 20000);
