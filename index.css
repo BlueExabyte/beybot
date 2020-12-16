@@ -1,29 +1,12 @@
-#ship1 {
-  position: absolute;
-  left: 0;
-  top: 0;
+.plinko-container {
+  position: relative;
+  width: 400px;
+  height: 900px;
+  /*background-color: #00ff00;*/
 }
 
-#ship2 {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
-
-#name1 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  font-size: 30px;
-  font-family: "KenPixel Mini Square";
-  padding-left: 1%;
-}
-
-#name2 {
-  position: absolute;
-  right: 0;
-  top: 0;
-  font-size: 30px;
-  font-family: "KenPixel Mini Square";
-  padding-right: 1%;
+#playerName {
+  overflow: hidden;
+  text-align: center;
+  font-family: Tahoma;
 }
